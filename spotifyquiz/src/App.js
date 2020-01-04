@@ -10,21 +10,42 @@ import Navbar from "./components/layout/Navbar";
 
 // Pages
 import home from "./pages/home";
+import login from "./pages/login";
+
+// Redux
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const theme = createMuiTheme(themeFile);
+
+const token = localStorage.FBIdToken;
+if (token) {
+  const decodedToken = jwtDecode(token);
+  if (decodedToken.exp * 1000 < Date.now()) {
+    store.dispatch(logoutUser());
+    window.location.href = "/login";
+  } else {
+    store.dispatch({ type: SET_AUTHENTICATED });
+    axios.defaults.headers.common["Authorization"] = token;
+    store.dispatch(getUserData());
+  }
+}
 
 class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <Router>
-          <Navbar />
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={home} />
-            </Switch>
-          </div>
-        </Router>
+        <Provider store={store}>
+          <Router>
+            <Navbar />
+            <div className="container">
+              <Switch>
+                <Route exact path="/" component={home} />
+                <Route exact path="/login" component={login} />
+              </Switch>
+            </div>
+          </Router>
+        </Provider>
       </MuiThemeProvider>
     );
   }

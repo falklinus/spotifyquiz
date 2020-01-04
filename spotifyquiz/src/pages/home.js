@@ -5,7 +5,7 @@ class home extends Component {
   componentDidMount() {}
   render() {
     return (
-      <div style={{ textAlign: "center" }}>
+      <div>
         <p>You are on the home page</p>
       </div>
     );
