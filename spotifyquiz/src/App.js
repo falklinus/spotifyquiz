@@ -4,6 +4,7 @@ import "./App.css";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import themeFile from "./util/theme";
+import axios from "axios";
 
 // Components
 import Navbar from "./components/layout/Navbar";
@@ -15,21 +16,24 @@ import login from "./pages/login";
 // Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { SET_AUTHENTICATED } from "./redux/types";
+import { logoutUser } from "./redux/actions/userActions";
 
 const theme = createMuiTheme(themeFile);
 
-// const token = localStorage.FBIdToken;
-// if (token) {
-//   const decodedToken = jwtDecode(token);
-//   if (decodedToken.exp * 1000 < Date.now()) {
-//     store.dispatch(logoutUser());
-//     window.location.href = "/login";
-//   } else {
-//     store.dispatch({ type: SET_AUTHENTICATED });
-//     axios.defaults.headers.common["Authorization"] = token;
-//     store.dispatch(getUserData());
-//   }
-// }
+const token = JSON.parse(localStorage.getItem("SpotifyToken"));
+if (token) {
+  console.log(token);
+  if (token.expires < Date.now()) {
+    store.dispatch(logoutUser());
+    //window.location.href = "/login";
+  } else {
+    store.dispatch({ type: SET_AUTHENTICATED, payload: token.access_token });
+    const headerToken = `Bearer ${token.access_token}`;
+    axios.defaults.headers.common["Authorization"] = headerToken;
+    //store.dispatch(getUserData());
+  }
+}
 
 class App extends Component {
   render() {
