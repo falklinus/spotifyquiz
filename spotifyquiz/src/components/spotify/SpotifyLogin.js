@@ -12,6 +12,9 @@ export const authEndpoint = 'https://accounts.spotify.com/authorize?';
 const clientId = "74c7667e428f44659fa14396a442d8ed";
 const redirectUri = "http://localhost:3000/";
 const scopes = [
+    "streaming",
+    "user-read-email",
+    "user-read-private",
     "user-read-currently-playing",
     "user-read-playback-state",
 ];
@@ -100,11 +103,7 @@ class SpotifyLogin extends Component {
                         </a>
                     )}
                     {this.state.token && (
-                        <SpotifyPlayer
-                            item={this.state.item}
-                            is_playing={this.state.is_playing}
-                            progress_ms={this.progress_ms}
-                        />
+                        <SpotifyPlayer token={this.state.token}> </SpotifyPlayer>
                         // Spotify Player Will Go Here In the Next Step
                     )}
                     <button onClick={ () =>{this.getCurrentlyPlaying()}}>Update</button>

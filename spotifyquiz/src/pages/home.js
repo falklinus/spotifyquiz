@@ -10,10 +10,10 @@ class home extends Component {
   render() {
     return (
         <Fragment>
-      <div>
-        <p>You are on the home page</p>
-      </div>
-    <SpotifyLogin />
+          <div>
+            <p>You are on the home page</p>
+          </div>
+          <SpotifyLogin />
         </Fragment>
     );
   }
