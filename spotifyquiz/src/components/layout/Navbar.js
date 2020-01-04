@@ -40,15 +40,16 @@ export class Navbar extends Component {
               </Button>
             </Link>
             {authenticated && (
-              <Button
-                style={{ position: "absolute", right: "10%" }}
-                color="inherit"
-                onClick={() => {
-                  this.handleLogout();
-                }}
-              >
-                Logout
-              </Button>
+              <Link to="/" style={{ position: "absolute", right: "10%" }}>
+                <Button
+                  style={{ color: "#fff" }}
+                  onClick={() => {
+                    this.handleLogout();
+                  }}
+                >
+                  Logout
+                </Button>
+              </Link>
             )}
           </Fragment>
         </Toolbar>

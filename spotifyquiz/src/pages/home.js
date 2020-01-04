@@ -8,7 +8,15 @@ import { Link } from "react-router-dom";
 import SpotifyLogoBlack from "../util/spotify_logo_black.png";
 
 class home extends Component {
-  componentDidMount() {}
+  constructor() {
+    super();
+    this.state = {};
+  }
+  componentDidMount() {
+    this.setState({
+      game_id: 123
+    });
+  }
   render() {
     const { authenticated } = this.props.user;
     return (
@@ -25,7 +33,7 @@ class home extends Component {
         {authenticated ? (
           <div>
             <br />
-            <Link to="/game/2123">
+            <Link to={`/game/${this.state.game_id}`}>
               <Button
                 style={{ fontSize: 20, width: "50%" }}
                 variant="contained"

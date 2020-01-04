@@ -18,7 +18,6 @@ export const logoutUser = () => dispatch => {
   dispatch({
     type: SET_UNAUTHENTICATED
   });
-  console.log(localStorage.getItem("SpotifyToken"));
 };
 
 const setAuthorizationHeader = token => {

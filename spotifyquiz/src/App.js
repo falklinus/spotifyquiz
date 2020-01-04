@@ -12,6 +12,7 @@ import Navbar from "./components/layout/Navbar";
 // Pages
 import home from "./pages/home";
 import login from "./pages/login";
+import game from "./pages/game";
 
 // Redux
 import { Provider } from "react-redux";
@@ -28,7 +29,13 @@ if (token) {
     store.dispatch(logoutUser());
     //window.location.href = "/login";
   } else {
-    store.dispatch({ type: SET_AUTHENTICATED, payload: token.access_token });
+    console.log(token.access_token);
+    store.dispatch({
+      type: SET_AUTHENTICATED,
+      payload: {
+        access_token: token.access_token
+      }
+    });
     const headerToken = `Bearer ${token.access_token}`;
     axios.defaults.headers.common["Authorization"] = headerToken;
     //store.dispatch(getUserData());
@@ -46,6 +53,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={home} />
                 <Route exact path="/login" component={login} />
+                <Route path="/game" component={game} />
               </Switch>
             </div>
           </Router>
