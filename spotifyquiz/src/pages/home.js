@@ -10,7 +10,7 @@ class home extends Component {
   render() {
     return (
         <Fragment>
-      <div style={{ textAlign: "center" }}>
+      <div>
         <p>You are on the home page</p>
       </div>
     <SpotifyLogin />

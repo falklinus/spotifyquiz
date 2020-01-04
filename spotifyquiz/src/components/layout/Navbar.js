@@ -22,11 +22,9 @@ export class Navbar extends Component {
                 <HomeIcon />
               </TooltipButton>
             </Link>
-            <Link to="/meal">
-              <TooltipButton tip="Create Meal">
-                <FastfoodIcon />
-              </TooltipButton>
-            </Link>
+            <Button color="inherit" component={Link} to="/login">
+              Login
+            </Button>
           </Fragment>
         </Toolbar>
       </AppBar>
