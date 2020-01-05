@@ -1,11 +1,8 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
-import SpotifyLogin from "./SpotifyLogin";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import {setSong, nextSong} from "../../redux/actions/gameActions";
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';

@@ -1,15 +1,18 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+
+// MUI
 import withStyles from "@material-ui/core/styles/withStyles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+
+// Redux
 import { connect } from "react-redux";
-import axios from "axios";
 import { setPlaylists } from "../../redux/actions/gameActions";
+import { setSelectedPlaylist } from "../../redux/actions/gameActions";
 
 const styles = theme => ({
   //...theme.spreadThis,
@@ -41,14 +44,21 @@ const styles = theme => ({
 class AlbumList extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = { toCreateGame: false };
   }
 
   componentDidMount() {
     this.props.setPlaylists();
   }
+  handleSelect = playlist => {
+    this.props.setSelectedPlaylist(playlist);
+    this.setState({ toCreateGame: true });
+  };
 
   render() {
+    if (this.state.toCreateGame === true) {
+      return <Redirect to="/create-game" />;
+    }
     const { playlists } = this.props.game;
     const { classes } = this.props;
     return (
@@ -58,9 +68,10 @@ class AlbumList extends Component {
             return (
               <Grid key={playlist.id} item sm={3}>
                 <Card className={classes.card}>
-                  <CardActionArea>
+                  <CardActionArea onClick={() => this.handleSelect(playlist)}>
                     {playlist.images ? (
                       <img
+                        alt="coverImage"
                         className={classes.image}
                         src={playlist.images[0].url}
                       />
@@ -74,7 +85,7 @@ class AlbumList extends Component {
                         justifyContent: "center"
                       }}
                     >
-                      <Typography variant="body2">
+                      <Typography variant="body2" style={{ color: "#111" }}>
                         <b>{playlist.name}</b>
                       </Typography>
                     </CardContent>
@@ -94,7 +105,8 @@ const mapStateToProps = state => ({
 });
 
 const mapActionsToProps = {
-  setPlaylists
+  setPlaylists,
+  setSelectedPlaylist
 };
 
 export default connect(

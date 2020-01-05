@@ -13,11 +13,12 @@ import Navbar from "./components/layout/Navbar";
 import home from "./pages/home";
 import login from "./pages/login";
 import game from "./pages/game";
+import createGame from "./pages/createGame";
 
 // Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import { SET_AUTHENTICATED } from "./redux/types";
+import { SET_AUTHENTICATED, RELOAD_GAME_STATE } from "./redux/types";
 import { logoutUser } from "./redux/actions/userActions";
 
 const theme = createMuiTheme(themeFile);
@@ -27,7 +28,7 @@ if (token) {
   console.log(token);
   if (token.expires < Date.now()) {
     store.dispatch(logoutUser());
-    //window.location.href = "/login";
+    window.location.href = "/";
   } else {
     console.log(token.access_token);
     store.dispatch({
@@ -39,6 +40,15 @@ if (token) {
     const headerToken = `Bearer ${token.access_token}`;
     axios.defaults.headers.common["Authorization"] = headerToken;
     //store.dispatch(getUserData());
+    const game = JSON.parse(localStorage.getItem("game"));
+    if (game) {
+      store.dispatch({
+        type: RELOAD_GAME_STATE,
+        payload: {
+          data: game
+        }
+      });
+    }
   }
 }
 
@@ -54,6 +64,7 @@ class App extends Component {
                 <Route exact path="/" component={home} />
                 <Route exact path="/login" component={login} />
                 <Route path="/game" component={game} />
+                <Route path="/create-game" component={createGame} />
               </Switch>
             </div>
           </Router>
