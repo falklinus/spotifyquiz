@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
-import SpotifyLogin from "./SpotifyLogin";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
@@ -24,7 +23,7 @@ class SpotifyPlayer extends Component {
 
   //Transfer the spotify user so that this website takes over and plays the current song
   transferPlaybackHere() {
-    const { deviceId, token } = this.state;
+    const { deviceId } = this.state;
     console.log(deviceId);
     axios
       .put(
@@ -75,7 +74,7 @@ class SpotifyPlayer extends Component {
       this.interval = setInterval(() => {
         if (this.state.position < this.state.duration) {
           console.log(1);
-          this.setState({ position: (this.state.position += 1000) });
+          this.setState({ position: this.state.position + 1000 });
         } else {
           clearInterval(this.interval);
         }
@@ -163,8 +162,6 @@ class SpotifyPlayer extends Component {
 
   render() {
     const {
-      token,
-      loggedIn,
       artistName,
       trackName,
       albumName,

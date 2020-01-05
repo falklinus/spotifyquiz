@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import Grid from "@material-ui/core/Grid";
+import React, { Component } from "react";
+//import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import SpotifyLogin from "../components/spotify/SpotifyLogin";
 import { connect } from "react-redux";
@@ -28,7 +28,11 @@ class home extends Component {
       >
         {/* <Grid item sm /> */}
         {/* <Grid item style={{ textAlign: "center" }}> */}
-        <img style={{ height: 100, width: 100 }} src={SpotifyLogoBlack} />
+        <img
+          style={{ height: 100, width: 100 }}
+          src={SpotifyLogoBlack}
+          alt="spotifyLogo"
+        />
         <h1>SpotifyQuiz</h1>
         {authenticated ? (
           <div>

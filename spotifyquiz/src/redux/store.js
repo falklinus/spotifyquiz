@@ -20,7 +20,7 @@ const store = createStore(
   initialState,
   compose(
     applyMiddleware(...middleware),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
+    window.devToolsExtension ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
   )
 );
 
