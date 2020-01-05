@@ -22,6 +22,7 @@ class SpotifyPlayer extends Component {
     };
   }
 
+  //Transfer the spotify user so that this website takes over and plays the current song
   transferPlaybackHere() {
     const { deviceId, token } = this.state;
     console.log(deviceId);
