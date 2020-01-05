@@ -1,7 +1,9 @@
 import {
   SET_PLAYLISTS,
   SET_SELECTED_PLAYLIST,
-  SET_PLAYLIST_TRACKS
+  SET_PLAYLIST_TRACKS,
+  NEXT_SONG,
+  SET_SONG
 } from "../types";
 
 import axios from "axios";
@@ -35,6 +37,24 @@ export const setSelectedPlaylist = playlist => dispatch => {
     type: SET_SELECTED_PLAYLIST,
     payload: {
       data: playlist
+    }
+  });
+};
+
+export const setSong = song => dispatch => {
+  dispatch({
+    type: SET_SONG,
+    payload: {
+      data: song
+    }
+  });
+};
+
+export const nextSong = isNextSong => dispatch => {
+  dispatch({
+    type: NEXT_SONG,
+    payload: {
+      data: isNextSong
     }
   });
 };

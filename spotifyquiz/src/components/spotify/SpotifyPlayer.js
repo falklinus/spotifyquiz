@@ -1,8 +1,45 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
+import {setSong, nextSong} from "../../redux/actions/gameActions";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import withStyles from "@material-ui/core/styles/withStyles";
+import PauseIcon from '@material-ui/icons/Pause';
+
+
+const styles = theme => ({
+  card: {
+    display: 'flex',
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  content: {
+    flex: '1 0 auto',
+  },
+  cover: {
+    width: 151,
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+  },
+  playIcon: {
+    height: 38,
+    width: 38,
+  },
+});
 
 class SpotifyPlayer extends Component {
   constructor(props) {
@@ -23,29 +60,29 @@ class SpotifyPlayer extends Component {
 
   //Transfer the spotify user so that this website takes over and plays the current song
   transferPlaybackHere() {
-    const { deviceId } = this.state;
+    const { deviceId, token } = this.state;
     console.log(deviceId);
     axios
-      .put(
-        "https://api.spotify.com/v1/me/player",
-        {
-          device_ids: [deviceId],
-          // To start playing when loaded
-          play: true
-        }
-        /* {
-          headers: { authorization: "Bearer " + token }
-        } */
-      )
-      .then(res => {
-        console.log(res);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+        .put(
+            "https://api.spotify.com/v1/me/player",
+            {
+              device_ids: [deviceId],
+              // To start playing when loaded
+              play: true
+            }
+            /* {
+              headers: { authorization: "Bearer " + token }
+            } */
+        )
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => {
+          console.log(error);
+        });
   }
 
-  onStateChanged(state) {
+  onSpotifyPlayerStateChanged(state) {
     // if we're no longer listening to music, we'll get a null state.
     if (state == null) {
       clearInterval(this.interval);
@@ -56,8 +93,8 @@ class SpotifyPlayer extends Component {
     const trackName = currentTrack.name;
     const albumName = currentTrack.album.name;
     const artistName = currentTrack.artists
-      .map(artist => artist.name)
-      .join(", ");
+        .map(artist => artist.name)
+        .join(", ");
     const playing = !state.paused;
     this.setState({
       position,
@@ -68,13 +105,14 @@ class SpotifyPlayer extends Component {
       playing
     });
 
-    clearInterval(this.interval);
+    this.props.setSong(currentTrack);
 
+    // Make sure to update position
+    clearInterval(this.interval);
     if (this.state.playing) {
       this.interval = setInterval(() => {
         if (this.state.position < this.state.duration) {
-          console.log(1);
-          this.setState({ position: this.state.position + 1000 });
+          this.setState({ position: (this.state.position += 1000) });
         } else {
           clearInterval(this.interval);
         }
@@ -112,7 +150,7 @@ class SpotifyPlayer extends Component {
 
       // Playback status updates
       this.player.on("player_state_changed", state => {
-        this.onStateChanged(state);
+        this.onSpotifyPlayerStateChanged(state);
         console.log(state);
       });
 
@@ -138,6 +176,11 @@ class SpotifyPlayer extends Component {
         this.player.disconnect();
       }
     }
+    if(this.props.game && this.props.game.isNextSong){
+      this.onNextClick();
+      this.props.nextSong(false);
+    }
+
   }
 
   componentWillUnmount() {
@@ -148,32 +191,69 @@ class SpotifyPlayer extends Component {
     }
   }
 
-  onPrevClick() {
+  onPrevClick = () => {
     this.player.previousTrack();
-  }
+  };
 
-  onPlayClick() {
+  onPlayClick = () => {
     this.player.togglePlay();
-  }
+  };
 
-  onNextClick() {
+  onNextClick = () => {
     this.player.nextTrack();
-  }
+  };
 
   render() {
     const {
+      token,
+      loggedIn,
       artistName,
       trackName,
       albumName,
       error,
       position,
       duration,
-      playing
+      playing,
     } = this.state;
+    const {classes} = this.props;
     return (
-      <Fragment>
-        <div>
+        <Fragment>
+          <Card className={classes.card}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component="h5" variant="h5">
+                  {trackName}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                  {artistName}
+                </Typography>
+              </CardContent>
+              <div className={classes.controls}>
+                <IconButton aria-label="previous" onClick={this.onPrevClick}>
+                  <SkipPreviousIcon />
+                </IconButton>
+                <IconButton aria-label="play/pause" onClick={this.onPlayClick}>
+                  {!playing ?
+                      (<PlayArrowIcon className={classes.playIcon} />) :
+                      (<PauseIcon className={classes.playIcon} />)}
+                </IconButton>
+                <IconButton aria-label="next" onClick={this.onPrevClick}>
+                  <SkipNextIcon />
+                </IconButton>
+              </div>
+            </div>
+            <CardMedia
+                className={classes.cover}
+                image="/static/images/cards/live-from-space.jpg"
+                title="Live from space album cover"
+            />
+          </Card>
           {error && <p>Error: {error}</p>}
+
+
+
+
+          {/* <div>
           <p>Spotify Player</p>
           <div>
             <p>Artist: {artistName}</p>
@@ -204,21 +284,21 @@ class SpotifyPlayer extends Component {
           >
             Next
           </Button>
-        </div>
-        <LinearProgress
-          variant="determinate"
-          value={(position / duration) * 100}
-        />
-      </Fragment>
+        </div>*/}
+          <LinearProgress
+              variant="determinate"
+              value={(position / duration) * 100}
+          />
+        </Fragment>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.user
+  user: state.user,
+  game: state.game
 });
-
 export default connect(
-  mapStateToProps,
-  null
-)(SpotifyPlayer);
+    mapStateToProps,
+    {setSong, nextSong}
+)(withStyles(styles)(SpotifyPlayer));

@@ -33,9 +33,10 @@ class home extends Component {
           src={SpotifyLogoBlack}
           alt="spotifyLogo"
         />*/}
-        <h1 style={{ padding: 20 }}>Välj en lista att skapa quiz från</h1>
+
         {authenticated ? (
           <div>
+            <h1 style={{ padding: 20 }}>Välj en lista att skapa quiz från</h1>
             <AlbumList />
             <br />
             <Link to={`/game/${this.state.game_id}`}>
