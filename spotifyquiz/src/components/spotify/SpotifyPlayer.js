@@ -32,10 +32,10 @@ class SpotifyPlayer extends Component {
           device_ids: [deviceId],
           // To start playing when loaded
           play: true
-        },
-        {
-          headers: { authorization: "Bearer " + token }
         }
+        /* {
+          headers: { authorization: "Bearer " + token }
+        } */
       )
       .then(res => {
         console.log(res);
@@ -88,7 +88,6 @@ class SpotifyPlayer extends Component {
     script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
     document.body.appendChild(script);
-    console.log("token", this.props.user.access_token);
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
         name: "Spotify Quiz",
