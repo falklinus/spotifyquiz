@@ -1,4 +1,4 @@
-import { SET_PLAYLISTS } from "../types";
+import {NEXT_SONG, SET_PLAYLISTS, SET_SONG} from "../types";
 
 import axios from "axios";
 
@@ -12,4 +12,22 @@ export const setPlaylists = () => dispatch => {
       }
     });
   });
+};
+
+export const setSong = (song) => dispatch => {
+  dispatch({
+    type: SET_SONG,
+    payload: {
+      data: song
+    }
+  })
+};
+
+export const nextSong = (isNextSong) => dispatch => {
+  dispatch({
+    type: NEXT_SONG,
+    payload: {
+      data: isNextSong
+    }
+  })
 };
