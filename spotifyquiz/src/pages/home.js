@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import SpotifyLogoBlack from "../util/spotify_logo_black.png";
+import AlbumList from "../components/spotify/AlbumList";
 
 class home extends Component {
   constructor() {
@@ -22,8 +23,7 @@ class home extends Component {
     return (
       <div
         style={{
-          textAlign: "center",
-          marginTop: 200
+          textAlign: "center"
         }}
       >
         {/* <Grid item sm /> */}
@@ -32,6 +32,7 @@ class home extends Component {
         <h1>SpotifyQuiz</h1>
         {authenticated ? (
           <div>
+            <AlbumList />
             <br />
             <Link to={`/game/${this.state.game_id}`}>
               <Button
