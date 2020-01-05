@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
+import equal from "fast-deep-equal";
+import { Link } from "react-router-dom";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
@@ -44,18 +46,23 @@ class createGame extends Component {
   }
 
   componentDidMount() {
-    //this.props.setTracks();
     console.log(this.props.game.selectedPlaylist);
     const playlist = this.props.game.selectedPlaylist;
     this.setState({
       playlist: playlist
     });
-    /* this.setState({
-      playlist: {
-        list: playlist,
-        tracks: tracks
-      }
-    }); */
+  }
+
+  componentDidUpdate(prevProps, prevState, snapShot) {
+    if (
+      !equal(prevProps.game.selectedPlaylist, this.props.game.selectedPlaylist)
+    ) {
+      console.log(this.props.game.selectedPlaylist);
+      const playlist = this.props.game.selectedPlaylist;
+      this.setState({
+        playlist: playlist
+      });
+    }
   }
   render() {
     const { classes } = this.props;
@@ -80,22 +87,26 @@ class createGame extends Component {
 
             <List className={classes.listRoot}>
               <ListSubHeader sm={4} style={{ margin: "auto", maxWidth: 300 }}>
-                <Button variant="contained" color="primary" fullWidth>
-                  Create Game
-                </Button>
+                <Link to="/game/123">
+                  <Button variant="contained" color="primary" fullWidth>
+                    Create Game
+                  </Button>
+                </Link>
               </ListSubHeader>
               {this.state.playlist.tracks
-                ? this.state.playlist.tracks.items.map(song => {
-                    return (
-                      <>
-                        <ListItem button key={song.track.id}>
-                          <ListItemText primary={song.track.name} />
-                        </ListItem>
-                        <Divider />
-                      </>
-                    );
-                  })
-                : console.log("hejsan")}
+                ? this.state.playlist.tracks.items
+                  ? this.state.playlist.tracks.items.map(song => {
+                      return (
+                        <>
+                          <ListItem button key={song.track.id}>
+                            <ListItemText primary={song.track.name} />
+                          </ListItem>
+                          <Divider />
+                        </>
+                      );
+                    })
+                  : null
+                : null}
             </List>
           </Grid>
         )}

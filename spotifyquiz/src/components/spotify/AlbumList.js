@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 import { setPlaylists } from "../../redux/actions/gameActions";
 import { setSelectedPlaylist } from "../../redux/actions/gameActions";
+import { setPlaylistTracks } from "../../redux/actions/gameActions";
 
 const styles = theme => ({
   //...theme.spreadThis,
@@ -52,6 +53,7 @@ class AlbumList extends Component {
   }
   handleSelect = playlist => {
     this.props.setSelectedPlaylist(playlist);
+    this.props.setPlaylistTracks(playlist);
     this.setState({ toCreateGame: true });
   };
 
@@ -106,7 +108,8 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = {
   setPlaylists,
-  setSelectedPlaylist
+  setSelectedPlaylist,
+  setPlaylistTracks
 };
 
 export default connect(

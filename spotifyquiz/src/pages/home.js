@@ -28,12 +28,12 @@ class home extends Component {
       >
         {/* <Grid item sm /> */}
         {/* <Grid item style={{ textAlign: "center" }}> */}
-        <img
+        {/* <img
           style={{ height: 100, width: 100 }}
           src={SpotifyLogoBlack}
           alt="spotifyLogo"
-        />
-        <h1>SpotifyQuiz</h1>
+        />*/}
+        <h1 style={{ padding: 20 }}>Välj en lista att skapa quiz från</h1>
         {authenticated ? (
           <div>
             <AlbumList />

@@ -1,4 +1,8 @@
-import { SET_PLAYLISTS, SET_SELECTED_PLAYLIST } from "../types";
+import {
+  SET_PLAYLISTS,
+  SET_SELECTED_PLAYLIST,
+  SET_PLAYLIST_TRACKS
+} from "../types";
 
 import axios from "axios";
 
@@ -14,15 +18,23 @@ export const setPlaylists = () => dispatch => {
   });
 };
 
-export const setSelectedPlaylist = playlist => dispatch => {
+export const setPlaylistTracks = playlist => dispatch => {
   axios.get(playlist.tracks.href).then(res => {
     console.log(res);
     dispatch({
-      type: SET_SELECTED_PLAYLIST,
+      type: SET_PLAYLIST_TRACKS,
       payload: {
-        data: playlist,
         tracks: res.data
       }
     });
+  });
+};
+
+export const setSelectedPlaylist = playlist => dispatch => {
+  dispatch({
+    type: SET_SELECTED_PLAYLIST,
+    payload: {
+      data: playlist
+    }
   });
 };
