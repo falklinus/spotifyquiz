@@ -1,36 +1,36 @@
-import React, { Component, Fragment } from "react";
-import axios from "axios";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import { connect } from "react-redux";
-import { setSong, nextSong } from "../../redux/actions/gameActions";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
-import withStyles from "@material-ui/core/styles/withStyles";
-import PauseIcon from "@material-ui/icons/Pause";
+import React, { Component, Fragment } from 'react';
+import axios from 'axios';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { connect } from 'react-redux';
+import { setSong, nextSong } from '../../redux/actions/gameActions';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import withStyles from '@material-ui/core/styles/withStyles';
+import PauseIcon from '@material-ui/icons/Pause';
 
 const styles = theme => ({
   card: {
-    display: "flex"
+    display: 'flex'
   },
   details: {
-    display: "flex",
-    flexDirection: "column"
+    display: 'flex',
+    flexDirection: 'column'
   },
   content: {
-    flex: "1 0 auto"
+    flex: '1 0 auto'
   },
   cover: {
     width: 151
   },
   controls: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(1)
   },
@@ -44,13 +44,13 @@ class SpotifyPlayer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: "",
-      deviceId: "",
+      token: '',
+      deviceId: '',
       loggedIn: false,
-      error: "",
-      trackName: "Track Name",
-      artistName: "Artist Name",
-      albumName: "Album Name",
+      error: '',
+      trackName: 'Track Name',
+      artistName: 'Artist Name',
+      albumName: 'Album Name',
       playing: false,
       position: 0,
       duration: 0
@@ -61,17 +61,37 @@ class SpotifyPlayer extends Component {
   transferPlaybackHere() {
     const { deviceId, token } = this.state;
     console.log(deviceId);
+
+    axios
+      .put('https://api.spotify.com/v1/me/player', {
+        device_ids: [deviceId],
+        play: true
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  playFromList() {
+    const { deviceId } = this.state;
+    const { uri } = this.props.game.selectedPlaylist.data;
+    console.log(uri);
+    console.log(deviceId);
     axios
       .put(
-        "https://api.spotify.com/v1/me/player",
+        'https://api.spotify.com/v1/me/player/play',
         {
-          device_ids: [deviceId],
-          // To start playing when loaded
+          context_uri: uri,
           play: true
+        },
+        {
+          params: {
+            device_id: deviceId
+          }
         }
-        /* {
-              headers: { authorization: "Bearer " + token }
-            } */
       )
       .then(res => {
         console.log(res);
@@ -93,7 +113,7 @@ class SpotifyPlayer extends Component {
     const albumName = currentTrack.album.name;
     const artistName = currentTrack.artists
       .map(artist => artist.name)
-      .join(", ");
+      .join(', ');
     const playing = !state.paused;
     this.setState({
       position,
@@ -121,45 +141,46 @@ class SpotifyPlayer extends Component {
 
   componentDidMount() {
     // Add spotify Web SDK to Site
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
+    const script = document.createElement('script');
+    script.src = 'https://sdk.scdn.co/spotify-player.js';
     script.async = true;
     document.body.appendChild(script);
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.player = new window.Spotify.Player({
-        name: "Spotify Quiz",
+        name: 'Spotify Quiz',
         getOAuthToken: cb => {
           cb(this.props.user.access_token);
         }
       });
       // Error handling
-      this.player.on("initialization_error", e => {
+      this.player.on('initialization_error', e => {
         console.error(e);
       });
-      this.player.on("authentication_error", e => {
+      this.player.on('authentication_error', e => {
         console.error(e);
         this.setState({ loggedIn: false });
       });
-      this.player.on("account_error", e => {
+      this.player.on('account_error', e => {
         console.error(e);
       });
-      this.player.on("playback_error", e => {
+      this.player.on('playback_error', e => {
         console.error(e);
       });
 
       // Playback status updates
-      this.player.on("player_state_changed", state => {
+      this.player.on('player_state_changed', state => {
         this.onSpotifyPlayerStateChanged(state);
         console.log(state);
       });
 
       // Ready
-      this.player.on("ready", data => {
+      this.player.on('ready', data => {
         let { device_id } = data;
         console.log(data);
-        console.log("Let the music play on!");
+        console.log('Let the music play on!');
         this.setState({ deviceId: device_id });
-        this.transferPlaybackHere();
+        //this.transferPlaybackHere();
+        this.playFromList();
       });
 
       // finally, connect!

@@ -1,16 +1,16 @@
-import React, { Component, Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 // MUI stuff
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Button from '@material-ui/core/Button';
 
-import SpotifyLogoWhite from "../../util/spotify_logo_white.png";
+import SpotifyLogoWhite from '../../util/spotify_logo_white.png';
 
 // Redux
-import { logoutUser } from "../../redux/actions/userActions";
-import { connect } from "react-redux";
+import { logoutUser } from '../../redux/actions/userActions';
+import { connect } from 'react-redux';
 
 export class Navbar extends Component {
   handleLogout = () => {
@@ -22,23 +22,28 @@ export class Navbar extends Component {
       <AppBar>
         <Toolbar
           className="nav-container"
-          style={{ position: "relative", width: "100%", padding: 0 }}
+          style={{ position: 'relative', width: '100%', padding: 0 }}
         >
           <Fragment>
-            <Link to="/" style={{ marginLeft: "10%" }}>
-              <Button style={{ textTransform: "none", color: "#fff" }}>
-                <img
-                  alt="spotifyLogoWhite"
-                  style={{ height: 30, marginRight: "5%" }}
-                  src={SpotifyLogoWhite}
-                />
-                SpotifyQuiz
-              </Button>
-            </Link>
+            <Button
+              href="/"
+              style={{
+                textTransform: 'none',
+                color: '#fff',
+                marginLeft: '10%'
+              }}
+            >
+              <img
+                alt="spotifyLogoWhite"
+                style={{ height: 30, marginRight: '5%' }}
+                src={SpotifyLogoWhite}
+              />
+              SpotifyQuiz
+            </Button>
             {authenticated && (
-              <Link to="/" style={{ position: "absolute", right: "10%" }}>
+              <Link to="/" style={{ position: 'absolute', right: '10%' }}>
                 <Button
-                  style={{ color: "#fff" }}
+                  style={{ color: '#fff' }}
                   onClick={() => {
                     this.handleLogout();
                   }}
