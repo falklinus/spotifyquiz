@@ -11,16 +11,25 @@ import Button from '@material-ui/core/Button';
 import { amber, green, red } from '@material-ui/core/colors';
 import { nextSong } from '../redux/actions/gameActions';
 
+import HighlightOff from '@material-ui/icons/HighlightOff';
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 import './game.css';
 
 const styles = theme => ({
-  textField: { margin: '10px auto 10px auto' },
-  submitButton: { margin: '10px 0' }
+  textField: {
+    margin:
+      window.innerHeight > 568 ? '50px auto 20px auto' : '30px auto 20px auto'
+  },
+  submitButton: { margin: '20px 0' },
+  answerText: {
+    margin: '0 15px 0 0px',
+    flexGrow: '2'
+  }
 });
 
 class game extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       artistName: '',
       songName: '',
@@ -33,11 +42,28 @@ class game extends Component {
       nextSong: false,
       answerColor: 'fff',
       answerText: '',
-      round: 1
+      round: 1,
+      windowWidth: 0,
+      windowHeight: 0
     };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateWindowDimensions);
+  }
+
+  updateWindowDimensions() {
+    this.setState({
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight
+    });
+  }
 
   cleanString = inputString => {
     return inputString
@@ -130,21 +156,24 @@ class game extends Component {
   setAnswer = () => {
     if (this.state.thisRoundScore === 0) {
       this.setState({
-        answerColor: red[600],
-        answerText: 'Too bad... 0/2 Points'
+        answerColor: 'rgba(252, 219, 219, 0.564)',
+        answerText: 'Too bad... 0/2 Points',
+        answerSymbol: 'red'
       });
     } else if (this.state.thisRoundScore === 1) {
       if (this.state.songCorrect)
         this.setState({ answerText: 'Song correct! 1/2 points' });
       else this.setState({ answerText: 'Artist correct! 1/2 points' });
       this.setState({
-        answerColor: amber[700]
+        answerColor: 'rgba(252, 251, 219, 0.564)',
+        answerSymbol: 'yellow'
         //answerText: 'Artist or song correct! 1/2 Points'
       });
     } else if (this.state.thisRoundScore === 2) {
       this.setState({
-        answerColor: green[600],
-        answerText: 'Good job, totally correct! 2/2 Points'
+        answerColor: 'rgba(219, 252, 227, 0.564)',
+        answerText: 'Good job, totally correct! 2/2 Points',
+        answerSymbol: 'green'
       });
     } else {
       this.setState({ answerColor: '#ffff', answerText: '' });
@@ -157,70 +186,113 @@ class game extends Component {
 
   render() {
     const { classes } = this.props;
-    return (
-      <>
-        <Card
-          className="gameCard"
-          //  style={{ backgroundColor: this.state.answerColor }}
-        >
-          <div className="topContainer">
-            <div className="js-start">
-              <Button href="/">End Game</Button>
-            </div>
-            <Typography variant="h6" className="js-end">
-              Total score {this.state.score} / {this.state.totalScore}
-            </Typography>
-          </div>
+    let answerSymbol;
+    if (this.state.answerSymbol === 'red') {
+      answerSymbol = (
+        <HighlightOff color="secondary" style={{ fontSize: '40px' }} />
+      );
+    } else if (this.state.answerSymbol === 'yellow') {
+      answerSymbol = (
+        <CheckCircleOutline style={{ fontSize: '40px', color: '#fdd835' }} />
+      );
+    } else if (this.state.answerSymbol === 'green') {
+      answerSymbol = (
+        <CheckCircleOutline color="primary" style={{ fontSize: '40px' }} />
+      );
+    }
 
-          {!this.state.gamePaused ? (
-            <div>
-              <Typography variant="h5">SONG {this.state.round}</Typography>
-              <form noValidate autoComplete="off" className="gameForm">
-                <TextField
-                  className={classes.textField}
-                  fullWidth
-                  name="songName"
-                  label="Song Name"
-                  value={this.state.songName}
-                  onChange={this.handleChange}
-                />
-                <TextField
-                  className={classes.textField}
-                  fullWidth
-                  name="artistName"
-                  label="Main Artist Name"
-                  value={this.state.artistName}
-                  onChange={this.handleChange}
-                />
-                <Button
-                  onClick={this.onSubmit}
-                  className={classes.submitButton}
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  Submit!
-                </Button>
-              </form>
-            </div>
-          ) : (
-            <div>
-              <Typography variant="h5">{this.state.answerText}</Typography>
+    let topContainerMarkup = (
+      <div className="topContainer">
+        <div className="end_game">
+          <Button href="/">End Game</Button>
+        </div>
+        <p className="score">
+          TOTAL SCORE <br /> {this.state.score} / {this.state.totalScore}
+        </p>
+      </div>
+    );
+
+    let gameMarkup;
+
+    if (!this.state.gamePaused) {
+      gameMarkup = (
+        <>
+          {topContainerMarkup}
+          <div>
+            <Typography variant="h3">SONG {this.state.round}</Typography>
+            <form noValidate autoComplete="off" className="gameForm">
+              <TextField
+                className={classes.textField}
+                fullWidth
+                name="songName"
+                label="Song Name"
+                value={this.state.songName}
+                onChange={this.handleChange}
+              />
+              <TextField
+                className={classes.textField}
+                fullWidth
+                name="artistName"
+                label="Main Artist Name"
+                value={this.state.artistName}
+                onChange={this.handleChange}
+              />
               <Button
-                onClick={this.onNextSong}
+                onClick={this.onSubmit}
                 className={classes.submitButton}
                 variant="contained"
                 color="primary"
+                fullWidth
               >
-                Next Song!
+                Submit!
               </Button>
-            </div>
-          )}
-        </Card>
-        <Typography variant="h5">
+            </form>
+          </div>
+        </>
+      );
+    } else {
+      gameMarkup = (
+        <>
+          {topContainerMarkup}
+          <div>
+            <Card
+              className="answerResponse"
+              style={{
+                borderRadius: '20px',
+                backgroundColor: `${this.state.answerColor}`
+              }}
+            >
+              {answerSymbol}
+              <Typography variant="body2" className={classes.answerText}>
+                {this.state.answerText}
+              </Typography>
+            </Card>
+            <Typography variant="body2">Wait for the next round</Typography>
+            <Button
+              onClick={this.onNextSong}
+              className={classes.submitButton}
+              variant="contained"
+              color="primary"
+            >
+              Next Song!
+            </Button>
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <>
+        {this.state.windowWidth < 768 ? (
+          <div className="gameCard">{gameMarkup}</div>
+        ) : (
+          <Card className="gameCard">{gameMarkup}</Card>
+        )}
+
+        {/* <Typography variant="h5">
           Song Similarity: {this.state.songSimilarity}
           Artist Similarity: {this.state.artistSimilarity}
-        </Typography>
+        </Typography> */}
         <SpotifyPlayer />
       </>
     );

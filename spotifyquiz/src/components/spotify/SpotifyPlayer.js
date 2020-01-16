@@ -237,41 +237,42 @@ class SpotifyPlayer extends Component {
     const { classes } = this.props;
     return (
       <Fragment>
-        <Card className={classes.card}>
-          <div className={classes.details}>
-            <CardContent className={classes.content}>
-              <Typography component="h5" variant="h5">
-                {trackName}
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                {artistName}
-              </Typography>
-            </CardContent>
-            <div className={classes.controls}>
-              <IconButton aria-label="previous" onClick={this.onPrevClick}>
-                <SkipPreviousIcon />
-              </IconButton>
-              <IconButton aria-label="play/pause" onClick={this.onPlayClick}>
-                {!playing ? (
-                  <PlayArrowIcon className={classes.playIcon} />
-                ) : (
-                  <PauseIcon className={classes.playIcon} />
-                )}
-              </IconButton>
-              <IconButton aria-label="next" onClick={this.onNextClick}>
-                <SkipNextIcon />
-              </IconButton>
+        <div style={{ display: 'none' }}>
+          <Card className={classes.card}>
+            <div className={classes.details}>
+              <CardContent className={classes.content}>
+                <Typography component="h5" variant="h5">
+                  {trackName}
+                </Typography>
+                <Typography variant="subtitle1" color="textSecondary">
+                  {artistName}
+                </Typography>
+              </CardContent>
+              <div className={classes.controls}>
+                <IconButton aria-label="previous" onClick={this.onPrevClick}>
+                  <SkipPreviousIcon />
+                </IconButton>
+                <IconButton aria-label="play/pause" onClick={this.onPlayClick}>
+                  {!playing ? (
+                    <PlayArrowIcon className={classes.playIcon} />
+                  ) : (
+                    <PauseIcon className={classes.playIcon} />
+                  )}
+                </IconButton>
+                <IconButton aria-label="next" onClick={this.onNextClick}>
+                  <SkipNextIcon />
+                </IconButton>
+              </div>
             </div>
-          </div>
-          <CardMedia
-            className={classes.cover}
-            image="/static/images/cards/live-from-space.jpg"
-            title="Live from space album cover"
-          />
-        </Card>
-        {error && <p>Error: {error}</p>}
+            <CardMedia
+              className={classes.cover}
+              image="/static/images/cards/live-from-space.jpg"
+              title="Live from space album cover"
+            />
+          </Card>
+          {error && <p>Error: {error}</p>}
 
-        {/* <div>
+          {/* <div>
           <p>Spotify Player</p>
           <div>
             <p>Artist: {artistName}</p>
@@ -303,10 +304,11 @@ class SpotifyPlayer extends Component {
             Next
           </Button>
         </div>*/}
-        <LinearProgress
-          variant="determinate"
-          value={(position / duration) * 100}
-        />
+          <LinearProgress
+            variant="determinate"
+            value={(position / duration) * 100}
+          />
+        </div>
       </Fragment>
     );
   }
