@@ -36,7 +36,9 @@ class home extends Component {
 
         {authenticated ? (
           <div>
-            <h1 style={{ padding: 20 }}>Välj en lista att skapa quiz från</h1>
+            <h1 style={{ padding: 20 }}>
+              Choose a playlist to quiz yourself on
+            </h1>
             <AlbumList />
           </div>
         ) : (
