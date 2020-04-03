@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 //import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import SpotifyLogin from "../components/spotify/SpotifyLogin";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import Button from '@material-ui/core/Button';
+import SpotifyLogin from '../components/spotify/SpotifyLogin';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import SpotifyLogoBlack from "../util/spotify_logo_black.png";
-import AlbumList from "../components/spotify/AlbumList";
+import SpotifyLogoBlack from '../util/spotify_logo_black.png';
+import AlbumList from '../components/spotify/AlbumList';
 
 class home extends Component {
   constructor() {
@@ -23,7 +23,7 @@ class home extends Component {
     return (
       <div
         style={{
-          textAlign: "center"
+          textAlign: 'center'
         }}
       >
         {/* <Grid item sm /> */}
@@ -38,16 +38,6 @@ class home extends Component {
           <div>
             <h1 style={{ padding: 20 }}>Välj en lista att skapa quiz från</h1>
             <AlbumList />
-            <br />
-            <Link to={`/game/${this.state.game_id}`}>
-              <Button
-                style={{ fontSize: 20, width: "50%" }}
-                variant="contained"
-                color="primary"
-              >
-                Create Quiz
-              </Button>
-            </Link>
           </div>
         ) : (
           <div>

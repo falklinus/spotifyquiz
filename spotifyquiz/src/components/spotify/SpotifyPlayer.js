@@ -58,7 +58,7 @@ class SpotifyPlayer extends Component {
   }
 
   //Transfer the spotify user so that this website takes over and plays the current song
-  transferPlaybackHere() {
+  async transferPlaybackHere() {
     const { deviceId, token } = this.state;
     console.log(deviceId);
 
@@ -75,16 +75,35 @@ class SpotifyPlayer extends Component {
       });
   }
 
-  playFromList() {
+  shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  async playFromList() {
     const { deviceId } = this.state;
     const { uri } = this.props.game.selectedPlaylist.data;
-    console.log(uri);
-    console.log(deviceId);
-    axios
+    const tracks = this.props.game.selectedPlaylist.tracks.items;
+    let uris = [];
+
+    tracks.forEach(track => {
+      uris.push(track.track.uri);
+    });
+
+    console.log(uris);
+    uris = this.shuffle(uris);
+
+    console.log(uris);
+
+    await axios
       .put(
         'https://api.spotify.com/v1/me/player/play',
         {
-          context_uri: uri,
+          /* context_uri: uri, */
+          uris,
           play: true
         },
         {
@@ -99,6 +118,21 @@ class SpotifyPlayer extends Component {
       .catch(error => {
         console.log(error);
       });
+
+    try {
+      await axios.put(
+        'https://api.spotify.com/v1/me/player/shuffle',
+        {},
+        {
+          params: {
+            state: true /* ,
+            device_id: deviceId */
+          }
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   onSpotifyPlayerStateChanged(state) {
@@ -241,33 +275,33 @@ class SpotifyPlayer extends Component {
           <Card className={classes.card}>
             <div className={classes.details}>
               <CardContent className={classes.content}>
-                <Typography component="h5" variant="h5">
+                <Typography component='h5' variant='h5'>
                   {trackName}
                 </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
+                <Typography variant='subtitle1' color='textSecondary'>
                   {artistName}
                 </Typography>
               </CardContent>
               <div className={classes.controls}>
-                <IconButton aria-label="previous" onClick={this.onPrevClick}>
+                <IconButton aria-label='previous' onClick={this.onPrevClick}>
                   <SkipPreviousIcon />
                 </IconButton>
-                <IconButton aria-label="play/pause" onClick={this.onPlayClick}>
+                <IconButton aria-label='play/pause' onClick={this.onPlayClick}>
                   {!playing ? (
                     <PlayArrowIcon className={classes.playIcon} />
                   ) : (
                     <PauseIcon className={classes.playIcon} />
                   )}
                 </IconButton>
-                <IconButton aria-label="next" onClick={this.onNextClick}>
+                <IconButton aria-label='next' onClick={this.onNextClick}>
                   <SkipNextIcon />
                 </IconButton>
               </div>
             </div>
             <CardMedia
               className={classes.cover}
-              image="/static/images/cards/live-from-space.jpg"
-              title="Live from space album cover"
+              image='/static/images/cards/live-from-space.jpg'
+              title='Live from space album cover'
             />
           </Card>
           {error && <p>Error: {error}</p>}
@@ -305,7 +339,7 @@ class SpotifyPlayer extends Component {
           </Button>
         </div>*/}
           <LinearProgress
-            variant="determinate"
+            variant='determinate'
             value={(position / duration) * 100}
           />
         </div>

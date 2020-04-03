@@ -14,6 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import StandardAlbumImage from '../util/standard_album_image.png';
 
 import './createGame.css';
 
@@ -72,11 +73,11 @@ class createGame extends Component {
         <Grid container>
           {this.state.playlist && (
             <Grid item className={classes.column}>
-              <Link to="/">
+              <Link to='/'>
                 <Button
                   style={{
                     position: 'fixed',
-                    transform: 'translateX(-50%)',
+                    transform: 'translateX(-100%)',
                     zIndex: '100'
                   }}
                 >
@@ -85,13 +86,21 @@ class createGame extends Component {
               </Link>
               {this.state.playlist.data && (
                 <div className={classes.columnHead}>
-                  <img
-                    alt="coverImage"
-                    className={classes.image}
-                    src={this.state.playlist.data.images[0].url}
-                  />
+                  {this.state.playlist.data.images.length > 0 ? (
+                    <img
+                      alt='coverImage'
+                      className={classes.image}
+                      src={this.state.playlist.data.images[0].url}
+                    />
+                  ) : (
+                    <img
+                      alt='coverImage'
+                      className={classes.image}
+                      src={StandardAlbumImage}
+                    />
+                  )}
                   {this.state.playlist.data && (
-                    <Typography variant="h5" style={{ textAlign: 'center' }}>
+                    <Typography variant='h5' style={{ textAlign: 'center' }}>
                       {this.state.playlist.data.name}
                     </Typography>
                   )}
@@ -99,9 +108,9 @@ class createGame extends Component {
               )}
 
               <List className={classes.listRoot}>
-                <ListSubHeader sm={4} style={{ margin: 'auto', maxWidth: 300 }}>
-                  <Link to="/game/123">
-                    <Button variant="contained" color="primary" fullWidth>
+                <ListSubHeader sm={4} style={{ margin: 'auto', width: 300 }}>
+                  <Link to='/game/123'>
+                    <Button variant='contained' color='primary' fullWidth>
                       Create Game
                     </Button>
                   </Link>
