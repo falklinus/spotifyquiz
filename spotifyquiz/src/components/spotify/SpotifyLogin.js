@@ -12,7 +12,7 @@ const styles = theme => ({
 
 export const authEndpoint = 'https://accounts.spotify.com/authorize?';
 const clientId = '74c7667e428f44659fa14396a442d8ed';
-const redirectUri = 'http://localhost:3000/';
+const redirectUri = process.env.REACT_APP_SITE_URL;
 const scopes = [
   'streaming',
   'user-read-email',
@@ -54,7 +54,7 @@ class SpotifyLogin extends Component {
 
   render() {
     return (
-      <Tooltip title="Login to spotify">
+      <Tooltip title='Login to spotify'>
         <a
           href={`${authEndpoint}client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
             '%20'
@@ -62,8 +62,8 @@ class SpotifyLogin extends Component {
         >
           <Button
             style={{ fontSize: 20, width: '50%' }}
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
           >
             Login with spotify
           </Button>
